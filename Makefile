@@ -28,3 +28,6 @@ report:
 
 check-format:
 	test -z $$(go fmt ./...)
+
+vet:
+	test -z $$(go vet ./...)
