@@ -13,15 +13,13 @@
 ## Release Milestones
  
 ### V0 (1 day)
-- [ ] Onboarding Documentation
-- [ ] Simple API response (hello world!)
-- [ ] Unit tests
-- [ ] Running somewhere other than the dev machine
+- [x] Onboarding Documentation
+- [x] Simple API response (hello world!)
+- [x] Unit tests
+- [x] Running somewhere other than the dev machine
  
 ### V1 (7 days)
-- [ ] Create translation endpoint
-- [ ] Store translations in short-term storage
-- [ ] Call existing service for translation
-- [ ] Move towards long-term storage
-
-
+- [x] Create translation endpoint
+- [x] Store translations in short-term storage
+- [x] Call existing service for translation
+- [x] Move towards long-term storage
