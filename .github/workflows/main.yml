@@ -40,10 +40,20 @@ jobs:
       - name: Run Vet Check
         run: make vet
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v6.0.1
+
   test:
     needs:
       - format-check
       - vet
+      - lint
     name: Test App
     runs-on: ubuntu-latest
     steps:

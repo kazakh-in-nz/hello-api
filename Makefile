@@ -2,7 +2,7 @@ GO_VERSION := 1.22
 
 .PHONY: install-go init-go
 
-setup: install-go init-go
+setup: install-go init-go install-lint
 
 install-go:
 	wget "https://golang.org/dl/go$(GO_VERSION).linux-amd64.tar.gz"
@@ -31,3 +31,9 @@ check-format:
 
 vet:
 	test -z $$(go vet ./...)
+
+install-lint:
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+lint:
+	golangci-lint run

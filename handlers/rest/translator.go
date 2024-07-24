@@ -29,7 +29,6 @@ func TranslateHandler(w http.ResponseWriter, r *http.Request) {
 	word := strings.ReplaceAll(r.URL.Path, "/", "")
 	translation := translate.Translate(word, language)
 	if translation == "" {
-		language = ""
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}

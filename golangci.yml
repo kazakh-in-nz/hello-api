@@ -1,0 +1,12 @@
+linters:
+  enable:
+    - gosec
+
+output:
+  format: colored-line-number
+
+  # print lines of code with issue, default is true
+  print-issued-lines: fallse
+
+  # print linter name in the end of issue text, defulat is true
+  print-linter-name: true
