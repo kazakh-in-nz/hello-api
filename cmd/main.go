@@ -8,6 +8,7 @@ import (
 
 	"github.com/kazakh-in-nz/hello-api/handlers"
 	"github.com/kazakh-in-nz/hello-api/handlers/rest"
+	"github.com/kazakh-in-nz/hello-api/translation"
 )
 
 func main() {
@@ -18,7 +19,9 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/hello", rest.TranslateHandler)
+	translationSvc := translation.NewStaticService()
+	translateHandler := rest.NewTranslatorHandler(translationSvc)
+	mux.HandleFunc("/hello", translateHandler.TranslateHandler)
 	mux.HandleFunc("/health", handlers.HealthCheck)
 
 	log.Printf("Listening on %s\n", addr)

@@ -4,20 +4,30 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
-
-	translate "github.com/kazakh-in-nz/hello-api/translation"
 )
 
 const (
 	defaultLanguage = "english"
 )
 
+type Translator interface {
+	Translate(word string, language string) string
+}
+
 type Resp struct {
 	Language    string `json:"language"`
 	Translation string `json:"translation"`
 }
 
-func TranslateHandler(w http.ResponseWriter, r *http.Request) {
+type TranslateHandler struct {
+	service Translator
+}
+
+func NewTranslatorHandler(service Translator) *TranslateHandler {
+	return &TranslateHandler{service: service}
+}
+
+func (t *TranslateHandler) TranslateHandler(w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(w)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
@@ -27,7 +37,7 @@ func TranslateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	word := strings.ReplaceAll(r.URL.Path, "/", "")
-	translation := translate.Translate(word, language)
+	translation := t.service.Translate(word, language)
 	if translation == "" {
 		w.WriteHeader(http.StatusNotFound)
 		return

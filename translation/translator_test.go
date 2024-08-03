@@ -27,9 +27,11 @@ func TestTranslate(t *testing.T) {
 		{"should return empty string if unknown word and unkown language", "bye", "dutch", ""},
 	}
 
+	underTest := translation.NewStaticService()
+
 	for _, tc := range tt {
 		t.Run(tc.desc, func(t *testing.T) {
-			res := translation.Translate(tc.word, tc.language)
+			res := underTest.Translate(tc.word, tc.language)
 
 			if res != tc.expected {
 				t.Errorf("expected %s, got %s", tc.expected, res)
