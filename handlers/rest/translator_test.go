@@ -9,8 +9,17 @@ import (
 	"testing"
 
 	"github.com/kazakh-in-nz/hello-api/handlers/rest"
-	"github.com/kazakh-in-nz/hello-api/translation"
 )
+
+type stubbedSvc struct{}
+
+func (s *stubbedSvc) Translate(word string, language string) string {
+	if word == "foo" {
+		return "bar"
+	}
+
+	return ""
+}
 
 func TestTranslateAPI(t *testing.T) {
 	tt := []struct {
@@ -22,17 +31,17 @@ func TestTranslateAPI(t *testing.T) {
 	}{
 		{
 			name:                "english translation",
-			endpoint:            "/hello",
+			endpoint:            "/foo",
 			statusCode:          http.StatusOK,
 			expectedLanguage:    "english",
-			expectedTranslation: "hello",
+			expectedTranslation: "bar",
 		},
 		{
 			name:                "german translation",
-			endpoint:            "/hello?language=german",
+			endpoint:            "/foo?language=german",
 			statusCode:          http.StatusOK,
 			expectedLanguage:    "german",
-			expectedTranslation: "hallo",
+			expectedTranslation: "bar",
 		},
 		{
 			name:                "not found",
@@ -43,7 +52,7 @@ func TestTranslateAPI(t *testing.T) {
 		},
 	}
 
-	underTest := rest.NewTranslatorHandler(translation.NewStaticService())
+	underTest := rest.NewTranslatorHandler(&stubbedSvc{})
 	handler := http.HandlerFunc(underTest.TranslateHandler)
 
 	for _, tc := range tt {
@@ -52,14 +61,13 @@ func TestTranslateAPI(t *testing.T) {
 			rec := httptest.NewRecorder()
 
 			handler.ServeHTTP(rec, req)
-
 			if rec.Code != tc.statusCode {
 				t.Errorf("expected status code %d, got %d", tc.statusCode, rec.Code)
 			}
 
 			var resp rest.Resp
-			_ = json.Unmarshal(rec.Body.Bytes(), &resp)
 
+			_ = json.Unmarshal(rec.Body.Bytes(), &resp)
 			if resp.Language != tc.expectedLanguage {
 				t.Errorf("expected language %s, got %s", tc.expectedLanguage, resp.Language)
 			}
