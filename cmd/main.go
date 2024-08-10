@@ -1,25 +1,29 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"os"
 
+	"github.com/kazakh-in-nz/hello-api/config"
 	"github.com/kazakh-in-nz/hello-api/handlers"
 	"github.com/kazakh-in-nz/hello-api/handlers/rest"
 	"github.com/kazakh-in-nz/hello-api/translation"
 )
 
 func main() {
-	addr := fmt.Sprintf(":%s", os.Getenv("PORT"))
-	if addr == ":" {
-		addr = ":8080"
-	}
+	cfg := config.LoadConfiguration()
+	addr := cfg.Port
 
 	mux := http.NewServeMux()
 
-	translationSvc := translation.NewStaticService()
+	var translationSvc rest.Translator
+	translationSvc = translation.NewStaticService()
+	if cfg.LegacyEndpoint != "" {
+		log.Printf("creating external translation client: %s", cfg.LegacyEndpoint)
+		client := translation.NewHelloClient(cfg.LegacyEndpoint)
+		translationSvc = translation.NewRemoteService(client)
+	}
+
 	translateHandler := rest.NewTranslatorHandler(translationSvc)
 	mux.HandleFunc("/hello", translateHandler.TranslateHandler)
 	mux.HandleFunc("/health", handlers.HealthCheck)
