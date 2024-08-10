@@ -1,5 +1,11 @@
 GO_VERSION := 1.22
 
+TAG := $(shell git describe --abbrev=0 --tags --always)
+HASH := $(shell git rev-parse HEAD)
+DATE := $(shell date +%Y-%m-%d.%H:%M:%S)
+
+LDFLAGS := -w -X github.com/holmes89/hello-api/handlers.hash=$(HASH) -X github.com/holmes89/hello-api/handlers.tag=$(TAG) -X github.com/holmes89/hello-api/handlers.date=$(DATE)
+
 .PHONY: install-go init-go
 
 setup: install-go init-go install-lint copy-hooks
@@ -14,7 +20,7 @@ init-go:
 	echo 'export PATH=$$PATH:$${HOME}/go/bin' >> $${HOME}/.zshrc
 
 build:
-	go build -o api cmd/main.go
+	go build -ldflags "$(LDFLAGS)" -o api cmd/main.go
 
 test:
 	go test -v ./... -coverprofile=coverage.out

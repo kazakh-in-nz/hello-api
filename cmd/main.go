@@ -27,6 +27,7 @@ func main() {
 	translateHandler := rest.NewTranslatorHandler(translationSvc)
 	mux.HandleFunc("/hello", translateHandler.TranslateHandler)
 	mux.HandleFunc("/health", handlers.HealthCheck)
+	mux.HandleFunc("/info", handlers.Info)
 
 	log.Printf("Listening on %s\n", addr)
 	log.Fatal(http.ListenAndServe(addr, mux))

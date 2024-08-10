@@ -143,6 +143,7 @@ jobs:
     name: Release
     needs: build
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
