@@ -3,11 +3,11 @@
 package translation_test
 
 import (
-	"encoding/json"
 	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/kazakh-in-nz/hello-api/translation"
@@ -30,16 +30,10 @@ func (suite *HelloClientSuite) SetupSuite() {
 	suite.mockServerService = new(MockService)
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
-		b, _ := io.ReadAll(r.Body)
-		defer r.Body.Close()
+		language := r.URL.Query().Get("language")
+		word := strings.ReplaceAll(r.URL.Path, "/", "")
 
-		var m map[string]interface{}
-		_ = json.Unmarshal(b, &m)
-
-		word, wordOk := m["word"].(string)
-		language, languageOk := m["language"].(string)
-
-		if !wordOk || !languageOk {
+		if word == "" || language == "" {
 			http.Error(w, "invalid input", 400)
 			return
 		}
