@@ -95,11 +95,29 @@ jobs:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
 
+      - name: Set up Git for getting tag and hash
+        run: |
+          git fetch --tags
+          echo "GIT_TAG=$(git describe --abbrev=0 --tags --always)" >> $GITHUB_ENV
+          echo "GIT_HASH=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          echo "BUILD_DATE=$(date +%Y-%m-%dT%H:%M:%S)" >> $GITHUB_ENV
+
       - name: Build Min
-        run: docker build -t ghcr.io/${{ github.repository }}/min .
+        run: |
+          docker build \
+            --build-arg TAG=${{ env.GIT_TAG }} \
+            --build-arg HASH=${{ env.GIT_HASH }} \
+            --build-arg DATE=${{ env.BUILD_DATE }} \
+            -t ghcr.io/${{ github.repository }}/min .
 
       - name: Build Dev
-        run: docker build -t ghcr.io/${{ github.repository }}/dev --target=dev .
+        run: |
+          docker build \
+            --build-arg TAG=${{ env.GIT_TAG }} \
+            --build-arg HASH=${{ env.GIT_HASH }} \
+            --build-arg DATE=${{ env.BUILD_DATE }} \
+            -t ghcr.io/${{ github.repository }}/dev \
+            --target=dev .
 
       - name: Log in to the GHCR
         uses: docker/login-action@v2
