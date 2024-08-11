@@ -2,9 +2,9 @@ GO_VERSION := 1.22
 
 TAG := $(shell git describe --abbrev=0 --tags --always)
 HASH := $(shell git rev-parse HEAD)
-DATE := $(shell date +%Y-%m-%d.%H:%M:%S)
+DATE := $(shell date +%Y-%m-%dT%H:%M:%S)
 
-LDFLAGS := -w -X github.com/holmes89/hello-api/handlers.hash=$(HASH) -X github.com/holmes89/hello-api/handlers.tag=$(TAG) -X github.com/holmes89/hello-api/handlers.date=$(DATE)
+LDFLAGS := -w -X github.com/kazakh-in-nz/hello-api/handlers.hash=$(HASH) -X github.com/kazakh-in-nz/hello-api/handlers.tag=$(TAG) -X github.com/kazakh-in-nz/hello-api/handlers.date=$(DATE)
 
 .PHONY: install-go init-go
 
