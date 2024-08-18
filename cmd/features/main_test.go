@@ -134,7 +134,7 @@ func InitializeTestSuite(sc *godog.TestSuiteContext) {
 		if dockerSocket == "" {
 			osUser := os.Getenv("USER")
 
-			if osUser != "" {
+			if osUser != "runner" {
 				dockerSocket = fmt.Sprintf("unix:///home/%s/.docker/desktop/docker.sock", osUser)
 			} else {
 				dockerSocket = "unix:///var/run/docker.sock"
