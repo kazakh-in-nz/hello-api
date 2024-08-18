@@ -1,19 +1,23 @@
-version: "3.8"
-
 services:
   api-min:
-    profiles: ['prod']
+    profiles: ["prod"]
     ports:
       - "8080:8080"
-    image: ghcr.io/holmes89/hello-api:min
+    image: ghcr.io/kazakh-in-nz/hello-api:min
     build: .
 
   api-dev:
-    profiles: ['dev']
+    profiles: ["dev"]
     ports:
       - "8080:8080"
-    image: ghcr.io/holmes89/hello-api:dev
+    image: ghcr.io/kazakh-in-nz/hello-api:dev
     build:
       context: .
       target: dev
 
+  database:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/:/data/

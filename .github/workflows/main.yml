@@ -8,7 +8,8 @@ on:
     branches:
       - main
     tags:
-      - 'v*'
+      - "v*"
+
 jobs:
   format-check:
     name: Format Check
@@ -86,6 +87,25 @@ jobs:
         with:
           name: reports
           path: reports
+
+  smoke-test:
+    name: Smoke Test Application
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.xx
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.22
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Run Smoke Tests
+        run: |
+          go get ./...
+          make test-bdd
 
   containerize:
     name: Build Containers

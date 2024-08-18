@@ -1,10 +1,11 @@
-// go:build unit
+//go:build unit
 
 package translation_test
 
 import (
-	"github.com/kazakh-in-nz/hello-api/translation"
 	"testing"
+
+	"github.com/kazakh-in-nz/hello-api/translation"
 )
 
 func TestTranslate(t *testing.T) {
